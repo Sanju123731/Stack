@@ -1,28 +1,34 @@
 class Solution {
     public boolean checkValidString(String s) {
-       int maxOpen=0;
-       int minOpen=0;
-       for(char ch:s.toCharArray())
+      Stack<Integer>st=new Stack<>();
+       Stack<Integer>starSt=new Stack<>();
+       for(int i=0;i<s.length();i++)
        {
-        if(ch=='(')
-        {
-            maxOpen++;
-            minOpen++;
-        }
-        else  if(ch==')')
-        {
-            maxOpen--;
-            minOpen--;
-        }
-        else{
-            // * acts as )
-            minOpen--;
-            // * acts as( 
-            maxOpen++;
-        }
-        if(maxOpen<0)return false;
-        if(minOpen<0) minOpen=0;
+        char ch=s.charAt(i);
+        if(ch=='('){
+           st.push(i);
        }
-       return minOpen==0;
+       else if(ch=='*')
+        starSt.push(i);
+        else{
+            if(!st.isEmpty()) st.pop();
+            else if(!starSt.isEmpty()) starSt.pop();
+            else return false;
+         }
     }
+    while(!st.isEmpty() && !starSt.isEmpty())
+    {
+      if(st.peek()<starSt.peek())
+      {
+        st.pop();
+        starSt.pop();
+      }
+      else
+      {
+        return false;
+      }
+     
+    }
+     return st.isEmpty();
+}
 }
